@@ -43,6 +43,7 @@ public class Lobby {
     public void teleportPlayerToLobby(Player player){
         player.getInventory().clearAll();
         player.teleport(this.lobbyConfig.getLobbyPosition());
+        this.addLobbyItem(player);
     }
 
     public void addLobbyItem(Player player){
@@ -111,7 +112,7 @@ public class Lobby {
             ArrayList tmp = (ArrayList) config.get("lobby-position");
             this.lobbyPosition = new Position((int)tmp.get(0),(int)tmp.get(1),(int)tmp.get(2), Server.getInstance().getLevelByName((String) tmp.get(3)));
             for (HashMap itemMap : (ArrayList<HashMap>)this.config.get("item"))
-                this.lobbyItems.add(new LobbyItem(Item.get((Integer) itemMap.get("id")).setCustomName((String) itemMap.get("name")).setLore((String) itemMap.get("lore")), (String) itemMap.get("command"), (int) itemMap.get("slot")));
+                this.lobbyItems.add(new LobbyItem(Item.get((Integer) itemMap.get("id")).setCustomName((String) itemMap.get("name")).setLore(String.valueOf(itemMap.get("lore"))), (String) itemMap.get("command"), (int) itemMap.get("slot")));
         }
 
         public Config getConfig() {
