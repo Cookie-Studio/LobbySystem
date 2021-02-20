@@ -1,0 +1,7 @@
+name: LobbySystem
+main: cn.cookiestudio.lobbysystem.PluginMain
+version: "1.0.0"
+author: smart_cmd
+api: ["1.0.11"]
+depend: ["Easy4Form"]
+loadbefore: ["Easy4Form"]

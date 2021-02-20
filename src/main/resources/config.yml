@@ -1,0 +1,4 @@
+lobby-position: [x,x,x,levelname]
+item:
+  - name: xxx
+    command: /xxx
