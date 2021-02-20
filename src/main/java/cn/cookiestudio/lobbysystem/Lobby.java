@@ -110,6 +110,7 @@ public class Lobby {
             PluginMain.getInstance().saveResource("config.yml");
             this.config = new Config(PluginMain.getInstance().getDataFolder() + "/config.yml");
             ArrayList tmp = (ArrayList) config.get("lobby-position");
+            Server.getInstance().loadLevel((String) tmp.get(3));
             this.lobbyPosition = new Position((int)tmp.get(0),(int)tmp.get(1),(int)tmp.get(2), Server.getInstance().getLevelByName((String) tmp.get(3)));
             for (HashMap itemMap : (ArrayList<HashMap>)this.config.get("item"))
                 this.lobbyItems.add(new LobbyItem(Item.get((Integer) itemMap.get("id")).setCustomName((String) itemMap.get("name")).setLore(String.valueOf(itemMap.get("lore"))), (String) itemMap.get("command"), (int) itemMap.get("slot")));
