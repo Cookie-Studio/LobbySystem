@@ -43,7 +43,12 @@ public class Lobby {
     public void teleportPlayerToLobby(Player player){
         player.getInventory().clearAll();
         player.teleport(this.lobbyConfig.getLobbyPosition());
-        player.getInventory().addItem(this.getLobbyItems().toArray(new Item[0]));
+    }
+
+    public void addLobbyItem(Player player){
+        for (LobbyItem lobbyItem : this.lobbyConfig.getLobbyItems()){
+            lobbyItem.addItem(player);
+        }
     }
     
     private class Listener implements cn.nukkit.event.Listener {
@@ -106,7 +111,7 @@ public class Lobby {
             ArrayList tmp = (ArrayList) config.get("lobby-position");
             this.lobbyPosition = new Position((int)tmp.get(0),(int)tmp.get(1),(int)tmp.get(2), Server.getInstance().getLevelByName((String) tmp.get(3)));
             for (HashMap itemMap : (ArrayList<HashMap>)this.config.get("item"))
-                this.lobbyItems.add(new LobbyItem(Item.get((Integer) itemMap.get("id")).setCustomName((String) itemMap.get("name")), (String) itemMap.get("command")));
+                this.lobbyItems.add(new LobbyItem(Item.get((Integer) itemMap.get("id")).setCustomName((String) itemMap.get("name")).setLore((String) itemMap.get("lore")), (String) itemMap.get("command"), (int) itemMap.get("slot")));
         }
 
         public Config getConfig() {
@@ -144,10 +149,12 @@ public class Lobby {
 
         private Item item;
         private String command;
+        private int slot;
 
-        public LobbyItem(Item item,String command){
+        public LobbyItem(Item item,String command,int slot){
             this.item = item;
             this.command = command;
+            this.slot = slot;
         }
 
         public Item getItem() {
@@ -164,6 +171,10 @@ public class Lobby {
 
         public void invokeCommand(Player player){
             Server.getInstance().getCommandMap().dispatch(player,command);
+        }
+
+        public void addItem(Player player){
+            player.getInventory().setItem(this.slot,this.item);
         }
     }
 }
