@@ -9,10 +9,12 @@ import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.player.PlayerDropItemEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
+import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Position;
 import cn.nukkit.utils.Config;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Lobby {
     
@@ -83,6 +85,13 @@ public class Lobby {
                 Lobby.this.getLobbyConfig().getMatchedLobbyItem(event.getItem()).invokeCommand(event.getPlayer());
             }
         }
+
+        @EventHandler
+        public void onPlayerJoinPacket(DataPacketReceiveEvent event){
+            if (event.getPacket().pid() == 113){
+                Server.getInstance().getCommandMap().dispatch(event.getPlayer(),"hub");
+            }
+        }
     }
 
     public class LobbyConfig {
@@ -93,9 +102,11 @@ public class Lobby {
 
         public LobbyConfig(){
             PluginMain.getInstance().saveResource("config.yml");
-            this.config = new Config("config.yml");
+            this.config = new Config(PluginMain.getInstance().getDataFolder() + "/config.yml");
             ArrayList tmp = (ArrayList) config.get("lobby-position");
             this.lobbyPosition = new Position((int)tmp.get(0),(int)tmp.get(1),(int)tmp.get(2), Server.getInstance().getLevelByName((String) tmp.get(3)));
+            for (HashMap itemMap : (ArrayList<HashMap>)this.config.get("item"))
+                this.lobbyItems.add(new LobbyItem(Item.get((Integer) itemMap.get("id")).setCustomName((String) itemMap.get("name")), (String) itemMap.get("command")));
         }
 
         public Config getConfig() {

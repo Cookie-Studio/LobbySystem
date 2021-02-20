@@ -25,10 +25,9 @@ public class PluginMain extends PluginBase {
     public void onEnable() {
         this.getLogger().info("plugin enable!");
         this.saveResource("config.yml");
-        lobby = new Lobby();
         pluginMain = this;
+        lobby = new Lobby();
         this.registerCommand();
-
     }
 
     @Override
