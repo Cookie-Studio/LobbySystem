@@ -1,7 +1,7 @@
 #lobby-position: [x,x,x,levelname]
 #item:
 #  - name: xxx
-#    lore: 233
+#    lore: 233e
 #    id: 1
 #    command: /xxx
 #    slot: 0
