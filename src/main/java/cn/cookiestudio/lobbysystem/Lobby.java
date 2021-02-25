@@ -25,7 +25,7 @@ public class Lobby {
     public Lobby(){
         this.lobbyConfig = new LobbyConfig();
         Server.getInstance().getPluginManager().registerEvents(new Lobby.Listener(),PluginMain.getInstance());
-        Server.getInstance().getScheduler().scheduleDelayedTask(new LobbyTask(PluginMain.getInstance()),5);
+        Server.getInstance().getScheduler().scheduleRepeatingTask(new LobbyTask(PluginMain.getInstance()),5);
     }
 
     public LobbyConfig getLobbyConfig() {
