@@ -7,6 +7,7 @@ import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockBurnEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
+import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.player.PlayerDropItemEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
@@ -66,10 +67,8 @@ public class Lobby {
         }
 
         @EventHandler
-        public void onEntityDamageByEntity(EntityDamageByEntityEvent event){
-            if (event.getDamager() instanceof Player
-                    && event.getEntity() instanceof Player
-                    && Lobby.this.isPositionInLobby(event.getEntity()))
+        public void onEntityDamage(EntityDamageEvent event){
+            if (Lobby.this.isPositionInLobby(event.getEntity()))
                 event.setCancelled();
         }
 
