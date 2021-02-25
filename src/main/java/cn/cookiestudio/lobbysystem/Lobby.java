@@ -7,12 +7,13 @@ import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockBurnEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
-import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.player.PlayerDropItemEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Position;
+import cn.nukkit.plugin.Plugin;
+import cn.nukkit.scheduler.PluginTask;
 import cn.nukkit.utils.Config;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ public class Lobby {
     public Lobby(){
         this.lobbyConfig = new LobbyConfig();
         Server.getInstance().getPluginManager().registerEvents(new Lobby.Listener(),PluginMain.getInstance());
+        Server.getInstance().getScheduler().scheduleDelayedTask(new LobbyTask(PluginMain.getInstance()),5);
     }
 
     public LobbyConfig getLobbyConfig() {
@@ -67,7 +69,7 @@ public class Lobby {
         }
 
         @EventHandler
-        public void onEntityDamage(EntityDamageEvent event){
+        public void onEntityDamage(EntityDamageByEntityEvent event){
             if (Lobby.this.isPositionInLobby(event.getEntity()))
                 event.setCancelled();
         }
@@ -176,6 +178,21 @@ public class Lobby {
 
         public void addItem(Player player){
             player.getInventory().setItem(this.slot,this.item);
+        }
+    }
+
+
+    private class LobbyTask extends PluginTask{
+
+        public LobbyTask(Plugin owner) {
+            super(owner);
+        }
+
+        @Override
+        public void onRun(int i) {
+            for (Player player : Lobby.this.getLobbyConfig().getLobbyPosition().getLevel().getPlayers().values())
+                if (player.getY() <= 0)
+                    Lobby.this.teleportPlayerToLobby(player);
         }
     }
 }
