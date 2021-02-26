@@ -9,6 +9,7 @@ import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.player.PlayerDropItemEvent;
+import cn.nukkit.event.player.PlayerFoodLevelChangeEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.item.Item;
@@ -99,6 +100,12 @@ public class Lobby {
             if (event.getPacket().pid() == 113){
                 Server.getInstance().getCommandMap().dispatch(event.getPlayer(),"hub");
             }
+        }
+
+        @EventHandler
+        public void onPlayerFoodDataChange(PlayerFoodLevelChangeEvent event){
+            if (Lobby.this.isPositionInLobby(event.getPlayer()))
+                event.setCancelled();
         }
     }
 
