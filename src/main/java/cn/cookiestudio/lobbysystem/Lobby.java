@@ -49,6 +49,7 @@ public class Lobby {
         player.getInventory().clearAll();
         player.teleport(this.lobbyConfig.getLobbyPosition());
         this.addLobbyItem(player);
+        player.setSpawn(this.lobbyConfig.getLobbyPosition());
     }
 
     public void addLobbyItem(Player player){
