@@ -1,13 +1,13 @@
-#lobby-position: [x,x,x,levelname]
-#item:
-#  - name: xxx
-#    lore: 233e
-#    id: 1
-#    command: /xxx
-#    slot: 0
-#hub-when-join: true
-#hub-title: xxxx
-#hub-subtitle: xxx
-#hub-actionbar: xxx
-#hub-message: xxx
-#lighting-when-hub: true
+lobby-position: [0,64,0,world]
+item:
+  - name: ExampleItem
+    lore: This is an example lore
+    namespaceid: clock
+    command: me This is an example command
+    slot: 0
+hub-when-join: true
+hub-title: Hello!
+hub-subtitle: Hi!
+hub-actionbar: Welcome!
+hub-message: QAQ
+lighting-when-hub: true

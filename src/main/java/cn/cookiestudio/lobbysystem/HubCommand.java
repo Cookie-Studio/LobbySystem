@@ -19,7 +19,7 @@ public class HubCommand extends Command {
         }else{
             Config config = LobbySystem.getInstance().getLobby().getLobbyConfig().getConfig();
             Player player = commandSender.asPlayer();
-            LobbySystem.getInstance().getLobby().teleportPlayerToLobby(player);
+            LobbySystem.getInstance().getLobby().hub(player);
             player.sendTitle((String)config.get("hub-title"),(String)config.get("hub-subtitle"));
             player.sendActionBar((String)config.get("hub-actionbar"));
             player.sendMessage((String)config.get("hub-message"));

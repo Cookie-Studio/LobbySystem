@@ -7,12 +7,10 @@ import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockBurnEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
-import cn.nukkit.event.player.PlayerDropItemEvent;
-import cn.nukkit.event.player.PlayerFoodLevelChangeEvent;
-import cn.nukkit.event.player.PlayerInteractEvent;
-import cn.nukkit.event.player.PlayerLocallyInitializedEvent;
+import cn.nukkit.event.player.*;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Position;
+import cn.nukkit.network.protocol.AnimatePacket;
 import cn.nukkit.plugin.Plugin;
 import cn.nukkit.scheduler.PluginTask;
 import cn.nukkit.utils.Config;
@@ -44,7 +42,7 @@ public class Lobby {
         return this.getLobbyConfig().getLobbyPosition().getLevel() == position.getLevel();
     }
     
-    public void teleportPlayerToLobby(Player player){
+    public void hub(Player player){
         player.getInventory().clearAll();
         player.teleport(this.lobbyConfig.getLobbyPosition());
         this.addLobbyItem(player);
@@ -96,8 +94,17 @@ public class Lobby {
         }
 
         @EventHandler
-        public void onPlayerJoinPacket(PlayerLocallyInitializedEvent event){
-            LobbySystem.getInstance().getLobby().teleportPlayerToLobby(event.getPlayer());
+        public void onPlayerSwingArm(PlayerAnimationEvent event){
+            if (event.getAnimationType() == AnimatePacket.Action.SWING_ARM){
+                if (Lobby.this.getLobbyConfig().isItemMatched(event.getPlayer().getInventory().getItemInHand()) && Lobby.this.isPositionInLobby(event.getPlayer())){
+                    Lobby.this.getLobbyConfig().getMatchedLobbyItem(event.getPlayer().getInventory().getItemInHand()).invokeCommand(event.getPlayer());
+                }
+            }
+        }
+
+        @EventHandler
+        public void onPlayerJoin(PlayerLocallyInitializedEvent event){
+            LobbySystem.getInstance().getLobby().hub(event.getPlayer());
         }
 
         @EventHandler
@@ -120,7 +127,7 @@ public class Lobby {
             Server.getInstance().loadLevel((String) tmp.get(3));
             this.lobbyPosition = new Position((int)tmp.get(0),(int)tmp.get(1),(int)tmp.get(2), Server.getInstance().getLevelByName((String) tmp.get(3)));
             for (HashMap itemMap : (ArrayList<HashMap>)this.config.get("item"))
-                this.lobbyItems.add(new LobbyItem(Item.get((Integer) itemMap.get("id")).setCustomName((String) itemMap.get("name")).setLore(String.valueOf(itemMap.get("lore"))), (String) itemMap.get("command"), (int) itemMap.get("slot")));
+                this.lobbyItems.add(new LobbyItem(Item.fromString((String) itemMap.get("namespaceid")).setCustomName((String) itemMap.get("name")).setLore(String.valueOf(itemMap.get("lore"))), (String) itemMap.get("command"), (int) itemMap.get("slot")));
         }
 
         public Config getConfig() {
@@ -175,8 +182,8 @@ public class Lobby {
             return command;
         }
 
-        public boolean isItemMatched(Item item){
-            return item.getId() == this.item.getId();
+        public boolean isItemMatched(Item i){
+            return this.item.getNamespaceId().equals(i.getNamespaceId());
         }
 
         public void invokeCommand(Player player){
@@ -199,7 +206,7 @@ public class Lobby {
         public void onRun(int i) {
             for (Player player : Lobby.this.getLobbyConfig().getLobbyPosition().getLevel().getPlayers().values())
                 if (player.getY() <= 0)
-                    Lobby.this.teleportPlayerToLobby(player);
+                    Lobby.this.hub(player);
         }
     }
 }
