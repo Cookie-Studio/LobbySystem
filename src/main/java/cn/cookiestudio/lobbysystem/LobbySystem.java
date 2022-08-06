@@ -3,9 +3,9 @@ package cn.cookiestudio.lobbysystem;
 import cn.nukkit.Server;
 import cn.nukkit.plugin.PluginBase;
 
-public class PluginMain extends PluginBase {
+public class LobbySystem extends PluginBase {
 
-    private static PluginMain pluginMain;
+    private static LobbySystem instance;
     private Lobby lobby;
 
     @Override
@@ -13,8 +13,8 @@ public class PluginMain extends PluginBase {
         this.getLogger().info("plugin load!");
     }
 
-    public static PluginMain getInstance() {
-        return pluginMain;
+    public static LobbySystem getInstance() {
+        return instance;
     }
 
     public Lobby getLobby() {
@@ -25,7 +25,7 @@ public class PluginMain extends PluginBase {
     public void onEnable() {
         this.getLogger().info("plugin enable!");
         this.saveResource("config.yml");
-        pluginMain = this;
+        instance = this;
         lobby = new Lobby();
         this.registerCommand();
     }

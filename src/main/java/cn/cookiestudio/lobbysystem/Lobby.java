@@ -6,12 +6,11 @@ import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockBurnEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
-import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.player.PlayerDropItemEvent;
 import cn.nukkit.event.player.PlayerFoodLevelChangeEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
-import cn.nukkit.event.server.DataPacketReceiveEvent;
+import cn.nukkit.event.player.PlayerLocallyInitializedEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Position;
 import cn.nukkit.plugin.Plugin;
@@ -26,8 +25,8 @@ public class Lobby {
     
     public Lobby(){
         this.lobbyConfig = new LobbyConfig();
-        Server.getInstance().getPluginManager().registerEvents(new Lobby.Listener(),PluginMain.getInstance());
-        Server.getInstance().getScheduler().scheduleRepeatingTask(new LobbyTask(PluginMain.getInstance()),5);
+        Server.getInstance().getPluginManager().registerEvents(new Lobby.Listener(), LobbySystem.getInstance());
+        Server.getInstance().getScheduler().scheduleRepeatingTask(new LobbyTask(LobbySystem.getInstance()),5);
     }
 
     public LobbyConfig getLobbyConfig() {
@@ -97,10 +96,8 @@ public class Lobby {
         }
 
         @EventHandler
-        public void onPlayerJoinPacket(DataPacketReceiveEvent event){
-            if (event.getPacket().pid() == 113){
-                Server.getInstance().getCommandMap().dispatch(event.getPlayer(),"hub");
-            }
+        public void onPlayerJoinPacket(PlayerLocallyInitializedEvent event){
+            LobbySystem.getInstance().getLobby().teleportPlayerToLobby(event.getPlayer());
         }
 
         @EventHandler
@@ -117,8 +114,8 @@ public class Lobby {
         private ArrayList<LobbyItem> lobbyItems = new ArrayList<>();
 
         public LobbyConfig(){
-            PluginMain.getInstance().saveResource("config.yml");
-            this.config = new Config(PluginMain.getInstance().getDataFolder() + "/config.yml");
+            LobbySystem.getInstance().saveResource("config.yml");
+            this.config = new Config(LobbySystem.getInstance().getDataFolder() + "/config.yml");
             ArrayList tmp = (ArrayList) config.get("lobby-position");
             Server.getInstance().loadLevel((String) tmp.get(3));
             this.lobbyPosition = new Position((int)tmp.get(0),(int)tmp.get(1),(int)tmp.get(2), Server.getInstance().getLevelByName((String) tmp.get(3)));
@@ -165,6 +162,7 @@ public class Lobby {
 
         public LobbyItem(Item item,String command,int slot){
             this.item = item;
+            this.item.setItemLockMode(Item.ItemLockMode.LOCK_IN_SLOT);
             this.command = command;
             this.slot = slot;
         }

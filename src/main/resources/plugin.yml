@@ -1,5 +1,5 @@
 name: LobbySystem
-main: cn.cookiestudio.lobbysystem.PluginMain
-version: "1.0.0"
-author: smart_cmd
-api: ["1.0.11"]
+main: cn.cookiestudio.lobbysystem.LobbySystem
+version: "1.1.0"
+author: daoge_cmd
+api: ["1.0.13"]
