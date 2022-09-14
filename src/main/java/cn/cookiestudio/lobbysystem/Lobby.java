@@ -88,6 +88,7 @@ public class Lobby {
 
         @EventHandler
         public void onPlayerInteract(PlayerInteractEvent event){
+            if (event.getItem() == null) return;
             if (Lobby.this.getLobbyConfig().isItemMatched(event.getItem()) && Lobby.this.isPositionInLobby(event.getPlayer())){
                 Lobby.this.getLobbyConfig().getMatchedLobbyItem(event.getItem()).invokeCommand(event.getPlayer());
             }

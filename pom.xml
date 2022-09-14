@@ -6,7 +6,7 @@
 
     <groupId>groupId</groupId>
     <artifactId>LobbySystem</artifactId>
-    <version>1.1.0-PNX</version>
+    <version>1.1.1-PNX</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
