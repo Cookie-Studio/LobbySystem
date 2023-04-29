@@ -1,13 +1,13 @@
-#lobby-position: [x,x,x,levelname]
-#item:
-#  - name: xxx
-#    lore: 233e
-#    id: 1
-#    command: /xxx
-#    slot: 0
-#hub-when-join: true
-#hub-title: xxxx
-#hub-subtitle: xxx
-#hub-actionbar: xxx
-#hub-message: xxx
-#lighting-when-hub: true
+lobby-position: [x,x,x,levelname]
+item:
+  - name: xxx
+    lore: 233e
+    id: 1
+    command: /xxx
+    slot: 0
+hub-when-join: true
+hub-title: xxxx
+hub-subtitle: xxx
+hub-actionbar: xxx
+hub-message: xxx
+lighting-when-hub: true
